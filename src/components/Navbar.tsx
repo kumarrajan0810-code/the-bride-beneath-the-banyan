@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { ArrowUpRight, ChevronRight, Menu, X } from 'lucide-react'
+import { ChevronRight, Menu, X } from 'lucide-react'
 import { motion, AnimatePresence } from 'motion/react'
 import MusicPlayer from './MusicPlayer'
 
