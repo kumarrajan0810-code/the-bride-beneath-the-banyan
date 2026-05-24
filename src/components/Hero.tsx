@@ -1,4 +1,6 @@
+import { useState, useEffect, useRef } from 'react'
 import { ArrowUpRight, Play } from 'lucide-react'
+import { motion, AnimatePresence } from 'motion/react'
 import Navbar from './Navbar'
 import BottomRightCorner from './BottomRightCorner'
 
@@ -7,23 +9,63 @@ interface HeroProps {
 }
 
 const Hero = ({ setActivePage }: HeroProps) => {
+  const [isVideoLoaded, setIsVideoLoaded] = useState(false)
+  const [videoEnded, setVideoEnded] = useState(false)
+  const videoRef = useRef<HTMLVideoElement>(null)
+
+  // Force play once the video has buffered enough
+  useEffect(() => {
+    if (isVideoLoaded && videoRef.current) {
+      videoRef.current.play().catch((err) => console.log("Autoplay blocked by browser:", err))
+    }
+  }, [isVideoLoaded])
+
   return (
     <div className="w-full h-screen flex items-center justify-center p-3 md:p-5 bg-[#07090D]">
       <section className="relative w-full max-w-[1536px] h-full rounded-[1.5rem] md:rounded-[3rem] overflow-hidden shadow-none flex flex-col items-center bg-[#07090D] group">
         
-        {/* Static Image Background */}
-        <img
-          src="/hero-bg.png"
-          alt="The Bride Beneath The Banyan"
+        {/* PRELOADER OVERLAY */}
+        <AnimatePresence>
+          {!isVideoLoaded && (
+            <motion.div 
+              initial={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 1.2, ease: "easeInOut" }}
+              className="absolute inset-0 z-50 flex flex-col items-center justify-center bg-[#07090D]"
+            >
+              <div className="flex flex-col items-center justify-center">
+                <motion.img 
+                  src="/loader.png" 
+                  alt="Loading Archives..."
+                  animate={{ opacity: [0.6, 1, 0.6] }}
+                  transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
+                  className="w-[280px] md:w-[360px] lg:w-[420px] object-contain drop-shadow-[0_0_15px_rgba(198,165,107,0.1)]"
+                />
+              </div>
+            </motion.div>
+          )}
+        </AnimatePresence>
+
+        {/* Video Background — plays once */}
+        <video
+          ref={videoRef}
+          muted
+          playsInline
+          onCanPlayThrough={() => setIsVideoLoaded(true)}
+          onEnded={() => setVideoEnded(true)}
           className="absolute inset-0 w-full h-full object-cover object-[65%] lg:object-center z-0"
-        />
+        >
+          <source src="/hero-video.mp4" type="video/mp4" />
+        </video>
 
         {/* Gradient Overlay for text readability */}
         <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-black/15 to-black/50 z-[1]" />
         <div className="absolute inset-0 bg-gradient-to-r from-black/50 via-transparent to-transparent z-[1]" />
 
-        {/* Content Layer */}
-        <div className="relative z-10 w-full h-full flex flex-col">
+        {/* Content Layer — fades in after video ends */}
+        <div
+          className={`relative z-10 w-full h-full flex flex-col transition-opacity duration-1000 ${videoEnded ? 'opacity-100' : 'opacity-0'}`}
+        >
           <Navbar setActivePage={setActivePage} />
 
           {/* Main Content Area */}
