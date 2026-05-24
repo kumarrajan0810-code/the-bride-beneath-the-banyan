@@ -20,7 +20,7 @@ const Synopsis = ({ setActivePage }: SynopsisProps) => {
         </div>
       </div>
 
-      <div className="flex-1 flex flex-col items-center justify-start pt-[12vh] sm:pt-[15vh] px-6 sm:px-10 relative z-10 w-full max-w-[1200px] mx-auto">
+      <div className="flex-1 flex flex-col items-center justify-start pt-[12vh] sm:pt-[15vh] px-6 sm:px-10 relative z-10 w-full max-w-[1200px] mx-auto overflow-y-auto overflow-x-hidden pb-20 scrollbar-hide">
         
         {/* Title Block */}
         <motion.div 
