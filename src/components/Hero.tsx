@@ -33,14 +33,17 @@ const Hero = ({ setActivePage }: HeroProps) => {
               transition={{ duration: 1.2, ease: "easeInOut" }}
               className="absolute inset-0 z-50 flex flex-col items-center justify-center bg-[#07090D]"
             >
-              <div className="flex flex-col items-center justify-center">
-                <motion.img 
-                  src="/loader.png" 
-                  alt="Loading Archives..."
-                  animate={{ opacity: [0.6, 1, 0.6] }}
-                  transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
-                  className="w-[280px] md:w-[360px] lg:w-[420px] object-contain drop-shadow-[0_0_15px_rgba(198,165,107,0.1)]"
-                />
+              <div className="flex flex-col items-center gap-8">
+                {/* Elegant Minimalist Spinner */}
+                <div className="w-10 h-10 border-[2px] border-[rgba(198,165,107,0.15)] border-t-[#C6A56B] rounded-full animate-spin" />
+                
+                {/* Text */}
+                <div className="flex flex-col items-center gap-2">
+                  <span className="font-script text-3xl md:text-4xl text-[#C6A56B]">The Bride Beneath The Banyan</span>
+                  <span className="font-sans text-[10px] md:text-[11px] tracking-[0.4em] text-[rgba(243,233,210,0.5)] uppercase font-medium">
+                    Loading Archives
+                  </span>
+                </div>
               </div>
             </motion.div>
           )}
