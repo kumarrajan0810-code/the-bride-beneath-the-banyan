@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { ArrowUpRight, ChevronRight, Menu, X } from 'lucide-react'
 import { motion, AnimatePresence } from 'motion/react'
+import MusicPlayer from './MusicPlayer'
 
 interface NavbarProps {
   setActivePage: (page: 'home' | 'synopsis' | 'characters') => void
@@ -51,8 +52,10 @@ const Navbar = ({ setActivePage }: NavbarProps) => {
           </ul>
         </div>
 
-        {/* Right Button */}
-        <div className="flex-1 flex justify-end">
+        {/* Right Button & Music Player */}
+        <div className="flex-1 flex justify-end items-center">
+          <MusicPlayer />
+          
           <motion.button
             whileHover={{ scale: 1.02 }}
             whileTap={{ scale: 0.98 }}
