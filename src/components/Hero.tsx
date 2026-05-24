@@ -1,5 +1,6 @@
-import { useState } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { ArrowUpRight, Play } from 'lucide-react'
+import { motion, AnimatePresence } from 'motion/react'
 import Navbar from './Navbar'
 import BottomRightCorner from './BottomRightCorner'
 
@@ -8,16 +9,52 @@ interface HeroProps {
 }
 
 const Hero = ({ setActivePage }: HeroProps) => {
+  const [isVideoLoaded, setIsVideoLoaded] = useState(false)
   const [videoEnded, setVideoEnded] = useState(false)
+  const videoRef = useRef<HTMLVideoElement>(null)
+
+  // Force play once the video has buffered enough
+  useEffect(() => {
+    if (isVideoLoaded && videoRef.current) {
+      videoRef.current.play().catch((err) => console.log("Autoplay blocked by browser:", err))
+    }
+  }, [isVideoLoaded])
 
   return (
     <div className="w-full h-screen flex items-center justify-center p-3 md:p-5 bg-[#07090D]">
-      <section className="relative w-full max-w-[1536px] h-full rounded-[1.5rem] md:rounded-[3rem] overflow-hidden shadow-none flex flex-col items-center bg-white/5 group">
+      <section className="relative w-full max-w-[1536px] h-full rounded-[1.5rem] md:rounded-[3rem] overflow-hidden shadow-none flex flex-col items-center bg-[#07090D] group">
+        
+        {/* PRELOADER OVERLAY */}
+        <AnimatePresence>
+          {!isVideoLoaded && (
+            <motion.div 
+              initial={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 1.2, ease: "easeInOut" }}
+              className="absolute inset-0 z-50 flex flex-col items-center justify-center bg-[#07090D]"
+            >
+              <div className="flex flex-col items-center gap-8">
+                {/* Elegant Minimalist Spinner */}
+                <div className="w-10 h-10 border-[2px] border-[rgba(198,165,107,0.15)] border-t-[#C6A56B] rounded-full animate-spin" />
+                
+                {/* Text */}
+                <div className="flex flex-col items-center gap-2">
+                  <span className="font-script text-3xl md:text-4xl text-[#C6A56B]">The Bride Beneath The Banyan</span>
+                  <span className="font-sans text-[10px] md:text-[11px] tracking-[0.4em] text-[rgba(243,233,210,0.5)] uppercase font-medium">
+                    Loading Archives
+                  </span>
+                </div>
+              </div>
+            </motion.div>
+          )}
+        </AnimatePresence>
+
         {/* Video Background — plays once */}
         <video
-          autoPlay
+          ref={videoRef}
           muted
           playsInline
+          onCanPlayThrough={() => setIsVideoLoaded(true)}
           onEnded={() => setVideoEnded(true)}
           className="absolute inset-0 w-full h-full object-cover object-[65%] lg:object-center z-0"
         >
