@@ -52,20 +52,9 @@ const Navbar = ({ setActivePage }: NavbarProps) => {
           </ul>
         </div>
 
-        {/* Right Button & Music Player */}
+        {/* Music Player */}
         <div className="flex-1 flex justify-end items-center">
           <MusicPlayer />
-          
-          <motion.button
-            whileHover={{ scale: 1.02 }}
-            whileTap={{ scale: 0.98 }}
-            className="flex items-center bg-[rgba(10,10,15,0.55)] backdrop-blur-md border border-[rgba(198,165,107,0.25)] text-[#F3E9D2] rounded-full pl-2.5 pr-4 md:pr-6 py-2 md:py-2.5 gap-2 md:gap-3 hover:border-[rgba(198,165,107,0.5)] hover:shadow-[0_0_24px_rgba(198,165,107,0.15)] transition-all duration-300 group"
-          >
-            <div className="bg-[rgba(198,165,107,0.15)] p-1.5 rounded-full flex items-center justify-center">
-              <ArrowUpRight className="w-3.5 h-3.5 md:w-4 md:h-4 text-[#C6A56B]" />
-            </div>
-            <span className="text-[12px] md:text-[14px] font-sans font-medium tracking-wide">Pre-Order</span>
-          </motion.button>
         </div>
       </nav>
 
