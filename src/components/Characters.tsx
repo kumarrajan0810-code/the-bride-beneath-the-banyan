@@ -160,7 +160,7 @@ const strings = [
 ]
 
 interface CharactersProps {
-  setActivePage: (page: 'home' | 'characters') => void
+  setActivePage: (page: 'home' | 'synopsis' | 'characters') => void
 }
 
 const Characters = ({ setActivePage }: CharactersProps) => {

@@ -4,7 +4,7 @@ import Navbar from './Navbar'
 import BottomRightCorner from './BottomRightCorner'
 
 interface HeroProps {
-  setActivePage: (page: 'home' | 'characters') => void
+  setActivePage: (page: 'home' | 'synopsis' | 'characters') => void
 }
 
 const Hero = ({ setActivePage }: HeroProps) => {
