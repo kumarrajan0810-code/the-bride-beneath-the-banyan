@@ -8,23 +8,35 @@ interface HeroProps {
   setActivePage: (page: 'home' | 'synopsis' | 'characters') => void
 }
 
+// Persists across remounts — once the intro has played, it never replays
+let hasIntroPlayed = false
+
 const Hero = ({ setActivePage }: HeroProps) => {
-  const [isVideoLoaded, setIsVideoLoaded] = useState(false)
-  const [videoEnded, setVideoEnded] = useState(false)
+  const [isVideoLoaded, setIsVideoLoaded] = useState(hasIntroPlayed)
+  const [videoEnded, setVideoEnded] = useState(hasIntroPlayed)
   const videoRef = useRef<HTMLVideoElement>(null)
 
-  // Force play once the video has buffered enough
   useEffect(() => {
+    if (hasIntroPlayed && videoRef.current) {
+      // Returning to Home — skip to last frame so background isn't blank
+      videoRef.current.currentTime = videoRef.current.duration || 9999
+      return
+    }
     if (isVideoLoaded && videoRef.current) {
       videoRef.current.play().catch((err) => console.log("Autoplay blocked by browser:", err))
     }
   }, [isVideoLoaded])
 
+  const handleVideoEnded = () => {
+    hasIntroPlayed = true
+    setVideoEnded(true)
+  }
+
   return (
     <div className="w-full h-screen flex items-center justify-center p-3 md:p-5 bg-[#07090D]">
       <section className="relative w-full max-w-[1536px] h-full rounded-[1.5rem] md:rounded-[3rem] overflow-hidden shadow-none flex flex-col items-center bg-[#07090D] group">
         
-        {/* PRELOADER OVERLAY */}
+        {/* PRELOADER OVERLAY — only shows on first visit */}
         <AnimatePresence>
           {!isVideoLoaded && (
             <motion.div 
@@ -34,10 +46,7 @@ const Hero = ({ setActivePage }: HeroProps) => {
               className="absolute inset-0 z-50 flex flex-col items-center justify-center bg-[#07090D]"
             >
               <div className="flex flex-col items-center gap-8">
-                {/* Elegant Minimalist Spinner */}
                 <div className="w-10 h-10 border-[2px] border-[rgba(198,165,107,0.15)] border-t-[#C6A56B] rounded-full animate-spin" />
-                
-                {/* Text */}
                 <div className="flex flex-col items-center gap-2">
                   <span className="font-script text-3xl md:text-4xl text-[#C6A56B]">The Bride Beneath The Banyan</span>
                   <span className="font-sans text-[10px] md:text-[11px] tracking-[0.4em] text-[rgba(243,233,210,0.5)] uppercase font-medium">
@@ -55,7 +64,7 @@ const Hero = ({ setActivePage }: HeroProps) => {
           muted
           playsInline
           onCanPlayThrough={() => setIsVideoLoaded(true)}
-          onEnded={() => setVideoEnded(true)}
+          onEnded={handleVideoEnded}
           className="absolute inset-0 w-full h-full object-cover object-[65%] lg:object-center z-0"
         >
           <source src="/hero-video.mp4" type="video/mp4" />
@@ -65,7 +74,7 @@ const Hero = ({ setActivePage }: HeroProps) => {
         <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-black/15 to-black/50 z-[1]" />
         <div className="absolute inset-0 bg-gradient-to-r from-black/50 via-transparent to-transparent z-[1]" />
 
-        {/* Content Layer — fades in after video ends */}
+        {/* Content Layer — visible immediately on return visits */}
         <div
           className={`relative z-10 w-full h-full flex flex-col transition-opacity duration-1000 ${videoEnded ? 'opacity-100' : 'opacity-0'}`}
         >
