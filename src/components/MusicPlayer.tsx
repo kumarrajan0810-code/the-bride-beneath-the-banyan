@@ -136,22 +136,17 @@ const MusicPlayer = () => {
             className="overflow-hidden"
           >
             <div className="bg-[rgba(10,10,15,0.6)] backdrop-blur-md border border-[rgba(198,165,107,0.15)] rounded-2xl px-4 py-2.5 min-w-[200px] md:min-w-[260px]">
-              {/* Track name + time */}
-              <div className="flex items-center justify-between mb-2">
-                <div className="flex items-center gap-2">
-                  {isPlaying && (
-                    <div className="flex items-end gap-[2px] h-3">
-                      <motion.div animate={{ height: ["3px", "11px", "3px"] }} transition={{ duration: 0.8, repeat: Infinity, ease: "easeInOut" }} className="w-[2px] bg-[#C6A56B] rounded-full" />
-                      <motion.div animate={{ height: ["11px", "3px", "11px"] }} transition={{ duration: 0.8, repeat: Infinity, ease: "easeInOut" }} className="w-[2px] bg-[#C6A56B] rounded-full" />
-                      <motion.div animate={{ height: ["5px", "13px", "5px"] }} transition={{ duration: 0.8, repeat: Infinity, ease: "easeInOut", delay: 0.15 }} className="w-[2px] bg-[#C6A56B] rounded-full" />
-                    </div>
-                  )}
-                  <span className="text-[rgba(243,233,210,0.85)] text-[10px] md:text-[11px] font-sans font-medium uppercase tracking-[0.15em] truncate max-w-[120px] md:max-w-[160px]">
-                    {trackName}
-                  </span>
-                </div>
-                <span className="text-[rgba(243,233,210,0.4)] text-[9px] md:text-[10px] font-mono tabular-nums">
-                  {formatTime(currentTime)} / {formatTime(duration)}
+              {/* Track name */}
+              <div className="flex items-center gap-2 mb-2">
+                {isPlaying && (
+                  <div className="flex items-end gap-[2px] h-3">
+                    <motion.div animate={{ height: ["3px", "11px", "3px"] }} transition={{ duration: 0.8, repeat: Infinity, ease: "easeInOut" }} className="w-[2px] bg-[#C6A56B] rounded-full" />
+                    <motion.div animate={{ height: ["11px", "3px", "11px"] }} transition={{ duration: 0.8, repeat: Infinity, ease: "easeInOut" }} className="w-[2px] bg-[#C6A56B] rounded-full" />
+                    <motion.div animate={{ height: ["5px", "13px", "5px"] }} transition={{ duration: 0.8, repeat: Infinity, ease: "easeInOut", delay: 0.15 }} className="w-[2px] bg-[#C6A56B] rounded-full" />
+                  </div>
+                )}
+                <span className="text-[rgba(243,233,210,0.85)] text-[10px] md:text-[11px] font-sans font-medium uppercase tracking-[0.15em] truncate">
+                  {trackName}
                 </span>
               </div>
 
@@ -163,34 +158,37 @@ const MusicPlayer = () => {
                 onTouchMove={handleTouchSeek}
                 onTouchStart={handleTouchSeek}
               >
-                {/* Progress fill */}
                 <div
                   className="absolute top-0 left-0 h-full bg-gradient-to-r from-[#C6A56B] to-[#8E744A] rounded-full transition-none"
                   style={{ width: `${progress}%` }}
                 />
-                {/* Seek thumb */}
                 <div
                   className="absolute top-1/2 -translate-y-1/2 w-[10px] h-[10px] bg-[#C6A56B] rounded-full shadow-[0_0_6px_rgba(198,165,107,0.4)] opacity-0 group-hover/seek:opacity-100 transition-opacity"
                   style={{ left: `calc(${progress}% - 5px)` }}
                 />
               </div>
 
-              {/* Controls row */}
-              <div className="flex items-center justify-center gap-3 mt-2">
-                <button
-                  onClick={togglePlay}
-                  className="text-[rgba(243,233,210,0.8)] hover:text-[#C6A56B] transition-colors p-1 rounded-full hover:bg-white/5"
-                  title={isPlaying ? "Pause" : "Play"}
-                >
-                  {isPlaying ? <Pause className="w-3.5 h-3.5" /> : <Play className="w-3.5 h-3.5" />}
-                </button>
-                <button
-                  onClick={playNext}
-                  className="text-[rgba(243,233,210,0.5)] hover:text-[#C6A56B] transition-colors p-1 rounded-full hover:bg-white/5"
-                  title="Next Track"
-                >
-                  <SkipForward className="w-3.5 h-3.5" />
-                </button>
+              {/* Controls row: time on left, buttons on right */}
+              <div className="flex items-center justify-between mt-2">
+                <span className="text-[rgba(243,233,210,0.45)] text-[9px] md:text-[10px] font-mono tabular-nums">
+                  {formatTime(currentTime)} / {formatTime(duration)}
+                </span>
+                <div className="flex items-center gap-2">
+                  <button
+                    onClick={togglePlay}
+                    className="text-[rgba(243,233,210,0.8)] hover:text-[#C6A56B] transition-colors p-1 rounded-full hover:bg-white/5"
+                    title={isPlaying ? "Pause" : "Play"}
+                  >
+                    {isPlaying ? <Pause className="w-3.5 h-3.5" /> : <Play className="w-3.5 h-3.5" />}
+                  </button>
+                  <button
+                    onClick={playNext}
+                    className="text-[rgba(243,233,210,0.5)] hover:text-[#C6A56B] transition-colors p-1 rounded-full hover:bg-white/5"
+                    title="Next Track"
+                  >
+                    <SkipForward className="w-3.5 h-3.5" />
+                  </button>
+                </div>
               </div>
             </div>
           </motion.div>
