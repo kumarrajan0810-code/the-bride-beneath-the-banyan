@@ -35,14 +35,29 @@ const MusicPlayer = () => {
   }, [isSeeking])
 
   useEffect(() => {
-    setIsPlaying(!globalAudio.paused && globalAudio.currentTime > 0)
+    // Sync ALL state from the already-playing global audio on mount
+    const playing = !globalAudio.paused && globalAudio.currentTime > 0
+    setIsPlaying(playing)
     setTrackName(SONGS[currentTrackIndex].title)
+    if (playing) setIsExpanded(true)
+
+    // Duration is already known if audio was loaded before this mount
+    if (globalAudio.duration && isFinite(globalAudio.duration)) {
+      setDuration(globalAudio.duration)
+    }
+    if (globalAudio.currentTime > 0) {
+      setCurrentTime(globalAudio.currentTime)
+    }
 
     const handleEnded = () => playNext()
     const handlePlay = () => setIsPlaying(true)
     const handlePause = () => setIsPlaying(false)
-    const handleDurationChange = () => setDuration(globalAudio.duration)
-    const handleLoadedMetadata = () => setDuration(globalAudio.duration)
+    const handleDurationChange = () => {
+      if (isFinite(globalAudio.duration)) setDuration(globalAudio.duration)
+    }
+    const handleLoadedMetadata = () => {
+      if (isFinite(globalAudio.duration)) setDuration(globalAudio.duration)
+    }
 
     globalAudio.addEventListener('ended', handleEnded)
     globalAudio.addEventListener('play', handlePlay)
